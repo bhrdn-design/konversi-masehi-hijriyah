@@ -32,7 +32,7 @@
         .input-group input { width: 100%; padding: 10px; border: 1px solid #d4af37; border-radius: 8px; text-align: center; font-size: 16px; font-weight: bold; color: #fff; background: rgba(0,0,0,0.2); }
         button { color: #06241a; background: linear-gradient(135deg, #d4af37, #b8860b); font-weight: bold; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; transition: all 0.3s; margin-left: 5px; } 
         button:hover { background: #fff; transform: scale(1.05); }
-        .output-box { background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; border-radius: 10px; padding: 15px; margin: 20px 0; color: #fff; text-align: center; line-height: 1.6; font-weight: bold; }
+        .output-box { background: rgba(212, 175, 55, 0.1); border: 1px dashed #d4af37; border-radius: 10px; padding: 15px; margin: 20px 0; color: #fff; text-align: center; line-height: 1.6; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
         .footer { font-size: 12px; color: #d4af37; font-style: italic; margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(212, 175, 55, 0.3); }
         .pm-detail { color: #d4af37; font-weight: normal; font-size: 0.9em; display: block; border-top: 1px dashed #d4af37; padding-top: 8px; margin-top: 8px; }
     </style>
@@ -67,21 +67,22 @@
         <button onclick="BtHapusH()">Hapus</button> 
     </div>
 
-    <div class="output-box" id="Hasil2">Hasil Hijriyah akan muncul di sini.</div>
+    <div class="output-box" id="Hasil2">Hasil Hijriyah, Pranoto Mongso, & Saka muncul di sini.</div>
 
     <div class="footer">_______ SEMOGA BERMANFAAT _______</div>
 </div>
 
 <script>
-    const Int = x => Math.floor(x);
-    const namaHari = ["Sabtu","Ahad","Senin","Selasa","Rabu","Kamis","Jum'at","Sabtu"];
-    const namaPasaran = ["Kliwon","Legi","Pahing","Pon","Wage","Kliwon"];
-    const namaBulanM = ["Desember","Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
-    const namaBulanH = ["Dzulhijjah","Muharram","Shafar","Rabi'ul Awal","Rabi'ul Akhir","Jumadil Awal","Jumadil Akhir","Rajab","Sya'ban","Ramadhan","Syawal","Dzulqo'dah","Dzulhijjah"];
+    // Data Master
+    const namaHari = ["Ahad", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"];
+    const namaPasaran = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+    const namaBulanM = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+    const namaBulanH = ["", "Muharram", "Shafar", "Rabi'ul Awal", "Rabi'ul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulqo'dah", "Dzulhijjah"];
 
+    // Fungsi Pranoto Mongso
     function getPranotoMongso(d, m) {
         if ((m == 6 && d >= 23) || (m == 7) || (m == 8 && d <= 2)) return "Kasa: Tanah retak, waktu tepat untuk pengolahan lahan.";
-        if ((m == 8 && d >= 3) || (m == 8 && d <= 25)) return "Karo: Tanah mulai merekah, tanda awal musim kering.";
+        if ((m == 8 && d >= 3) && (m == 8 && d <= 25)) return "Karo: Tanah mulai merekah, tanda awal musim kering.";
         if ((m == 8 && d >= 26) || (m == 9 && d <= 18)) return "Katelu: Anak mengikuti orang tua, mulai masa tanam.";
         if ((m == 9 && d >= 19) || (m == 10 && d <= 13)) return "Kapat: Air mulai tampak, musim semi mulai tiba.";
         if ((m == 10 && d >= 14) || (m == 11 && d <= 9)) return "Kalima: Pancuran emas, awal datangnya hujan.";
@@ -95,69 +96,73 @@
         return "Tidak Terdeteksi";
     }
 
-    function BtHapusM(){ document.getElementById("Hasil1").innerHTML = "Data Terhapus"; }
-    function BtHapusH(){ document.getElementById("Hasil2").innerHTML = "Data Terhapus"; }
-
-    function MiladikeHijri(D, m, Y) {
-        let bulanAsli = m, tahunAsli = Y;
-        let A = Y*10000 + m*100+ D;
-        let G = 2 - Int(Y/100) + Int(Y/400);
-        if (A < 15821015) G = 0;
-        if (m < 3) { Y = Y - 1; m = m + 12; }
-        let Mjd = Int(365.25*(Y+4716)) + Int(30.6001*(m+1)) + D + G - 1524;
-        let H = Mjd - 1948440;
-        let L1 = H + 10632;
-        let N = Int((L1 - 1) / 10631);
-        if (L1 < 1) N = N - 1;
-        let L2 = L1 - 10631 * N + 354;
-        let J = Int(((10985 - L2) / 5316.0)) * Int((50.0 * L2) / 17719) + Int(L2 / 5670.0) * Int((43.0 * L2) / 15238);
-        let L3 = L2 - Int(((30 - J) / 15.0)) * Int((17719.0 * J) / 50) - Int((J / 16.0)) * Int((15238.0 * J) / 43) + 29;
-        let Mh = Int((24.0 * L3) / 709);
-        let Dh = L3 - Int((709.0 * Mh) / 24);
-        let Yh = 30 * N + J - 30;
-        let L = Mjd + 16;
-        let Hr = L % 7;
-        let Ps = L % 5;
-        return `Hari = ${namaHari[Hr]} ${namaPasaran[Ps]}, ${D} ${namaBulanM[bulanAsli]} ${tahunAsli} M / ${Dh} ${namaBulanH[Mh]} ${Yh} H`;
+    // Engine Perhitungan Julian Day
+    function hitungJDMasehi(D, M, Y) {
+        if (M <= 2) { Y -= 1; M += 12; }
+        let A = Math.floor(Y / 100);
+        let B = 2 - A + Math.floor(A / 4);
+        return Math.floor(365.25 * (Y + 4716)) + Math.floor(30.6001 * (M + 1)) + D + B - 1524;
     }
 
-    function HijrikeMiladi(H, m, Y) {
-        let Hh = Int((11.0 * Y + 3) / 30) + 354 * Y + 30 * m - Int((m - 1) / 2.0) + H - 385;
-        if (Y < 0) Hh = Hh - 1;
-        const Z = Hh + 1948440;
-        const alpha = Int((Z - 1867216.25) / 36524.25);
-        const A = Z < 2299161 ? Z : Z + 1 + alpha - Int(alpha / 4);
-        const B = A + 1524;
-        const C = Int((B - 122.1) / 365.25);
-        const D = Int(365.25 * C);
-        const E = Int((B - D) / 30.6001);
-        const Dm = Int(B - D - Int(30.6001 * E));
-        const Mm = E < 14 ? E - 1 : E - 13;
-        const Ym = Mm > 2 ? C - 4716 : C - 4715;
-        const L = Z + 16;
-        const Hr = L % 7;
-        const Ps = L % 5;
-        return `Hari = ${namaHari[Hr]} ${namaPasaran[Ps]}, ${Dm} ${namaBulanM[Mm]} ${Ym} M / ${H} ${namaBulanH[m]} ${Y} H`;
+    function hitungJDHijri(D, M, Y) {
+        return Math.floor((11 * Y + 3) / 30) + 354 * Y + 30 * M - Math.floor((M - 1) / 2) + D + 1948440 - 385;
+    }
+
+    function JDtoMasehi(JD) {
+        let Z = Math.floor(JD);
+        let alpha = Math.floor((Z - 1867216.25) / 36524.25);
+        let A = Z < 2299161 ? Z : Z + 1 + alpha - Math.floor(alpha / 4);
+        let B = A + 1524;
+        let C = Math.floor((B - 122.1) / 365.25);
+        let D = Math.floor(365.25 * C);
+        let E = Math.floor((B - D) / 30.6001);
+        return { d: B - D - Math.floor(30.6001 * E), m: E < 14 ? E - 1 : E - 13, y: (E < 14 ? E - 1 : E - 13) > 2 ? C - 4716 : C - 4715 };
+    }
+
+    function JDtoHijri(JD) {
+        let H = JD - 1948440;
+        let L1 = H + 10632;
+        let N = Math.floor((L1 - 1) / 10631);
+        let L2 = L1 - 10631 * N + 354;
+        let J = Math.floor((10985 - L2) / 5316) * Math.floor((50 * L2) / 17719) + Math.floor(L2 / 5670) * Math.floor((43 * L2) / 15238);
+        let L3 = L2 - Math.floor((30 - J) / 15) * Math.floor((17719 * J) / 50) - Math.floor(J / 16) * Math.floor((15238 * J) / 43) + 29;
+        return { d: L3 - Math.floor((709 * Math.floor((24 * L3) / 709)) / 24), m: Math.floor((24 * L3) / 709), y: 30 * N + J - 30 };
+    }
+
+    // Fungsi Display Output
+    function display(id, jd, dM, mM, yM, dH, mH, yH) {
+        let hrIdx = (jd + 1) % 7; 
+        let psIdx = (jd + 1) % 5;
+        let tahunSaka = (mM <= 2) ? (yM - 79) : (yM - 78);
+        let tahunJawa = yH + 512;
+        let pm = getPranotoMongso(dM, mM);
+
+        document.getElementById(id).innerHTML = 
+            `${namaHari[hrIdx]} ${namaPasaran[psIdx]}, ${dM} ${namaBulanM[mM]} ${yM} M <br>` +
+            `${dH} ${namaBulanH[mH]} ${yH} H / ${tahunSaka} Saka / ${tahunJawa} Jawa` +
+            `<span class='pm-detail'>Pranoto Mongso: ${pm}</span>`;
     }
 
     function BtHitungM() {
-        let tgl = document.getElementById("tglM").value * 1;
-        let bln = document.getElementById("blnM").value * 1;
-        let thn = document.getElementById("thnM").value * 1;
-        let hasilKonversi = MiladikeHijri(tgl, bln, thn);
-        let pm = getPranotoMongso(tgl, bln);
-        let saka = thn - 78;
-        document.getElementById("Hasil1").innerHTML = hasilKonversi + 
-            `<span class='pm-detail'>Pranoto Mongso: ${pm}</span>` +
-            `<span class='pm-detail'>Tahun Saka: ${saka} Saka</span>`;
+        let d = parseInt(document.getElementById("tglM").value);
+        let m = parseInt(document.getElementById("blnM").value);
+        let y = parseInt(document.getElementById("thnM").value);
+        let jd = hitungJDMasehi(d, m, y);
+        let h = JDtoHijri(jd);
+        display("Hasil1", jd, d, m, y, h.d, h.m, h.y);
     }
 
     function BtHitungH() {
-        let tgl = document.getElementById("tglH").value * 1;
-        let bln = document.getElementById("blnH").value * 1;
-        let thn = document.getElementById("thnH").value * 1;
-        document.getElementById("Hasil2").innerHTML = HijrikeMiladi(tgl, bln, thn);
+        let d = parseInt(document.getElementById("tglH").value);
+        let m = parseInt(document.getElementById("blnH").value);
+        let y = parseInt(document.getElementById("thnH").value);
+        let jd = hitungJDHijri(d, m, y);
+        let masehi = JDtoMasehi(jd);
+        display("Hasil2", jd, masehi.d, masehi.m, masehi.y, d, m, y);
     }
+
+    function BtHapusM() { document.getElementById("Hasil1").innerHTML = "Data Terhapus"; }
+    function BtHapusH() { document.getElementById("Hasil2").innerHTML = "Data Terhapus"; }
 </script>
 </body>
 </html>
