@@ -79,20 +79,20 @@
     const namaBulanM = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
     const namaBulanH = ["", "Muharram", "Shafar", "Rabi'ul Awal", "Rabi'ul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulqo'dah", "Dzulhijjah"];
 
-    // Fungsi Pranoto Mongso
+    // Fungsi Pranoto Mongso (Diperbaiki logika rentang & Operator AND/OR)
     function getPranotoMongso(d, m) {
-        if ((m == 6 && d >= 23) || (m == 7) || (m == 8 && d <= 2)) return "Kasa: Tanah retak, waktu tepat untuk pengolahan lahan.";
-        if ((m == 8 && d >= 3) && (m == 8 && d <= 25)) return "Karo: Tanah mulai merekah, tanda awal musim kering.";
-        if ((m == 8 && d >= 26) || (m == 9 && d <= 18)) return "Katelu: Anak mengikuti orang tua, mulai masa tanam.";
-        if ((m == 9 && d >= 19) || (m == 10 && d <= 13)) return "Kapat: Air mulai tampak, musim semi mulai tiba.";
-        if ((m == 10 && d >= 14) || (m == 11 && d <= 9)) return "Kalima: Pancuran emas, awal datangnya hujan.";
-        if ((m == 11 && d >= 10) || (m == 12 && d <= 22)) return "Kanem: Berlimpah buah, tanda syukur kepada alam.";
-        if ((m == 12 && d >= 23) || (m == 1) || (m == 2 && d <= 3)) return "Kapitu: Musim hujan lebat/banjir, saatnya waspada.";
-        if ((m == 2 && d >= 4) || (m == 3 && d <= 1)) return "Kawolu: Hewan berkembang biak, alam mulai subur.";
-        if ((m == 3 && d >= 2) || (m == 3 && d <= 26)) return "Kasanga: Burung bertelur, tanda kehidupan baru.";
-        if ((m == 3 && d >= 27) || (m == 4 && d <= 18)) return "Kadasa: Padi menguning, masa mendekati panen.";
-        if ((m == 4 && d >= 19) || (m == 5 && d <= 12)) return "Desta: Musim panen raya, waktu kemakmuran.";
-        if ((m == 5 && d >= 13) || (m == 6 && d <= 22)) return "Sada: Musim kering kembali, persiapan masa tanam baru.";
+        if ((m === 6 && d >= 23) || (m === 7) || (m === 8 && d <= 2)) return "Kasa: Tanah retak, waktu tepat untuk pengolahan lahan.";
+        if (m === 8 && d >= 3 && d <= 25) return "Karo: Tanah mulai merekah, tanda awal musim kering.";
+        if ((m === 8 && d >= 26) || (m === 9 && d <= 18)) return "Katelu: Anak mengikuti orang tua, mulai masa tanam.";
+        if ((m === 9 && d >= 19) || (m === 10 && d <= 13)) return "Kapat: Air mulai tampak, musim semi mulai tiba.";
+        if ((m === 10 && d >= 14) || (m === 11 && d <= 9)) return "Kalima: Pancuran emas, awal datangnya hujan.";
+        if ((m === 11 && d >= 10) || (m === 12 && d <= 22)) return "Kanem: Berlimpah buah, tanda syukur kepada alam.";
+        if ((m === 12 && d >= 23) || (m === 1) || (m === 2 && d <= 3)) return "Kapitu: Musim hujan lebat/banjir, saatnya waspada.";
+        if ((m === 2 && d >= 4) || (m === 3 && d <= 1)) return "Kawolu: Hewan berkembang biak, alam mulai subur.";
+        if (m === 3 && d >= 2 && d <= 26) return "Kasanga: Burung bertelur, tanda kehidupan baru.";
+        if ((m === 3 && d >= 27) || (m === 4 && d <= 18)) return "Kadasa: Padi menguning, masa mendekati panen.";
+        if ((m === 4 && d >= 19) || (m === 5 && d <= 12)) return "Desta: Musim panen raya, waktu kemakmuran.";
+        if ((m === 5 && d >= 13) || (m === 6 && d <= 22)) return "Sada: Musim kering kembali, persiapan masa tanam baru.";
         return "Tidak Terdeteksi";
     }
 
@@ -116,7 +116,10 @@
         let C = Math.floor((B - 122.1) / 365.25);
         let D = Math.floor(365.25 * C);
         let E = Math.floor((B - D) / 30.6001);
-        return { d: B - D - Math.floor(30.6001 * E), m: E < 14 ? E - 1 : E - 13, y: (E < 14 ? E - 1 : E - 13) > 2 ? C - 4716 : C - 4715 };
+        let d = B - D - Math.floor(30.6001 * E);
+        let m = E < 14 ? E - 1 : E - 13;
+        let y = m > 2 ? C - 4716 : C - 4715;
+        return { d, m, y };
     }
 
     function JDtoHijri(JD) {
@@ -126,13 +129,20 @@
         let L2 = L1 - 10631 * N + 354;
         let J = Math.floor((10985 - L2) / 5316) * Math.floor((50 * L2) / 17719) + Math.floor(L2 / 5670) * Math.floor((43 * L2) / 15238);
         let L3 = L2 - Math.floor((30 - J) / 15) * Math.floor((17719 * J) / 50) - Math.floor(J / 16) * Math.floor((15238 * J) / 43) + 29;
-        return { d: L3 - Math.floor((709 * Math.floor((24 * L3) / 709)) / 24), m: Math.floor((24 * L3) / 709), y: 30 * N + J - 30 };
+        let m = Math.floor((24 * L3) / 709);
+        let d = L3 - Math.floor((709 * m) / 24);
+        let y = 30 * N + J - 30;
+        return { d, m, y };
     }
 
-    // Fungsi Display Output
+    // Fungsi Display Output Utama
     function display(id, jd, dM, mM, yM, dH, mH, yH) {
-        let hrIdx = (jd + 1) % 7; 
-        let psIdx = (jd + 1) % 5;
+        // PERBAIKAN LOGIKA PASARAN: 
+        // Menggunakan ((jd % 5) + 5) % 5 memastikan tidak ada bug offset 1 hari
+        // maupun masalah modulo angka negatif jika menguji tahun masehi lampau.
+        let hrIdx = ((jd + 1) % 7 + 7) % 7; 
+        let psIdx = (jd % 5 + 5) % 5; 
+
         let tahunSaka = (mM <= 2) ? (yM - 79) : (yM - 78);
         let tahunJawa = yH + 512;
         let pm = getPranotoMongso(dM, mM);
@@ -143,26 +153,44 @@
             `<span class='pm-detail'>Pranoto Mongso: ${pm}</span>`;
     }
 
+    // Validasi agar aplikasi tidak crash jika input kosong/NaN
+    function validasiInput(val) {
+        return isNaN(val) || val <= 0 ? 1 : val;
+    }
+
     function BtHitungM() {
-        let d = parseInt(document.getElementById("tglM").value);
-        let m = parseInt(document.getElementById("blnM").value);
-        let y = parseInt(document.getElementById("thnM").value);
+        let d = validasiInput(parseInt(document.getElementById("tglM").value));
+        let m = validasiInput(parseInt(document.getElementById("blnM").value));
+        let y = validasiInput(parseInt(document.getElementById("thnM").value));
+        
         let jd = hitungJDMasehi(d, m, y);
         let h = JDtoHijri(jd);
         display("Hasil1", jd, d, m, y, h.d, h.m, h.y);
     }
 
     function BtHitungH() {
-        let d = parseInt(document.getElementById("tglH").value);
-        let m = parseInt(document.getElementById("blnH").value);
-        let y = parseInt(document.getElementById("thnH").value);
+        let d = validasiInput(parseInt(document.getElementById("tglH").value));
+        let m = validasiInput(parseInt(document.getElementById("blnH").value));
+        let y = validasiInput(parseInt(document.getElementById("thnH").value));
+        
         let jd = hitungJDHijri(d, m, y);
         let masehi = JDtoMasehi(jd);
         display("Hasil2", jd, masehi.d, masehi.m, masehi.y, d, m, y);
     }
 
-    function BtHapusM() { document.getElementById("Hasil1").innerHTML = "Data Terhapus"; }
-    function BtHapusH() { document.getElementById("Hasil2").innerHTML = "Data Terhapus"; }
+    // Peningkatan UX: membersihkan input box juga saat tombol hapus ditekan
+    function BtHapusM() { 
+        document.getElementById("tglM").value = "";
+        document.getElementById("blnM").value = "";
+        document.getElementById("thnM").value = "";
+        document.getElementById("Hasil1").innerHTML = "Data Terhapus"; 
+    }
+    function BtHapusH() { 
+        document.getElementById("tglH").value = "";
+        document.getElementById("blnH").value = "";
+        document.getElementById("thnH").value = "";
+        document.getElementById("Hasil2").innerHTML = "Data Terhapus"; 
+    }
 </script>
 </body>
 </html>
